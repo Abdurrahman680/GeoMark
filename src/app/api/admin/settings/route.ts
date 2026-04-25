@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
 import { getSession } from '@/lib/auth';
 import bcrypt from 'bcryptjs';
 
