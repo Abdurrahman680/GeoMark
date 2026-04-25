@@ -3,6 +3,8 @@ import { generateRegistrationOptions } from '@simplewebauthn/server';
 import prisma from '@/lib/prisma';
 import { rpID, rpName } from '@/lib/webauthn';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   try {
     const { email, name, cnic, department } = await req.json();
