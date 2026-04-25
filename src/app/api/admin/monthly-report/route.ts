@@ -1,18 +1,17 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const session = await getSession();
     if (!session || session.user.role !== 'ADMIN') {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { searchParams } = new URL(req.url);
+    const searchParams = req.nextUrl.searchParams;
     const month = parseInt(searchParams.get('month') || (new Date().getMonth() + 1).toString());
     const year = parseInt(searchParams.get('year') || new Date().getFullYear().toString());
 
