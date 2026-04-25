@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String       @id @default(uuid())
+  name       String
+  email      String       @unique
+  webauthnId String?      @unique
+  publicKey  String?
+  counter    BigInt       @default(0)
+  createdAt  DateTime     @default(now())
+  cnic       String?      @unique
+  department String?
+  role       String       @default("USER")
+  password   String?
+  deviceId   String?
+  attendance Attendance[]
+}
+
+model Organization {
+  id        String   @id @default("default")
+  name      String   @default("BioAttend")
+  latitude  Float    @default(33.5794)
+  longitude Float    @default(73.0636)
+  updatedAt DateTime @updatedAt
+  address   String   @default("")
+}
+
+model Attendance {
+  id        String   @id @default(uuid())
+  userId    String
+  date      DateTime @db.Date
+  timestamp DateTime @default(now())
+  type      String   @default("CHECK_IN")
+  status    String   @default("PRESENT")
+  latitude  Float?
+  longitude Float?
+  deviceId  String?
+  photoUrl  String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date, type])
+}
